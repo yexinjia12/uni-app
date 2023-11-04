@@ -41,11 +41,11 @@ uni.addInterceptor('uploadFile', httpInterceptor)
    3. 网络错误
  */
 
-//  添加泛型
+//  接口定义
 interface Data<T> {
   code: string
   msg: string
-  result: T
+  result: T // 定义泛型 T
 }
 export const http = <T>(options: UniApp.RequestOptions) => {
   return new Promise<Data<T>>((resolve, reject) => {
@@ -68,7 +68,7 @@ export const http = <T>(options: UniApp.RequestOptions) => {
           // 通用错误，根据后端错误信息提示
           uni.showToast({
             icon: 'none',
-            title: (res.data as Data<T>).msg || '请求错误',
+            title: (res.data as Data<T>).msg || '请求错误', // 类型推断
           })
           reject(res)
         }
