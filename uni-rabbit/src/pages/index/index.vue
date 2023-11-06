@@ -6,6 +6,7 @@ import { ref } from 'vue'
 import CustomNavbar from './components/CustomNavbar.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
+import type { XtxGuessInstance } from '@/types/component'
 
 // 获取banner轮播图
 const bannerList = ref<BannerItem[]>([])
@@ -27,17 +28,25 @@ const getHomeHotData = async () => {
   const res = await getHomeHotAPI()
   hotList.value = res.result
 }
+// 页面加载
 onLoad(() => {
   getHomeBannerData()
   getHomeCategoryData()
   getHomeHotData()
 })
+
+const geussRef = ref<XtxGuessInstance>()
+// 滚动组件触底时触发
+const onScrollToLower = () => {
+  console.log('触底了')
+  geussRef.value?.getMore()
+}
 </script>
 
 <template>
   <!-- 自定义导航栏 -->
   <CustomNavbar />
-  <scroll-view class="scroll-view" :scroll-y="true">
+  <scroll-view class="scroll-view" @scrolltolower="onScrollToLower" :scroll-y="true">
     <!-- 自定义轮播图 -->
     <XtxSwiper :list="bannerList" />
     <!-- 分类面板 -->
@@ -45,7 +54,7 @@ onLoad(() => {
     <!-- 热门推荐 -->
     <HotPanel :list="hotList" />
     <!-- 猜你喜欢 -->
-    <XtxGuess />
+    <XtxGuess ref="geussRef" />
   </scroll-view>
 </template>
 
