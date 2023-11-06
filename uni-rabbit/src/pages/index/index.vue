@@ -46,7 +46,14 @@ const isTriggered = ref(false)
 // 滚动容器下拉刷新
 const onRefresherrefresh = async () => {
   isTriggered.value = true
-  await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotData()])
+  // 重置猜你喜欢
+  geussRef.value?.resetData()
+  await Promise.all([
+    getHomeBannerData(),
+    getHomeCategoryData(),
+    getHomeHotData(),
+    geussRef.value?.getMore(),
+  ])
   isTriggered.value = false
 }
 </script>
