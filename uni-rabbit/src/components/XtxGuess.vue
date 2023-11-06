@@ -8,12 +8,27 @@ const pageParams: Required<PageParams> = {
   page: 1,
   pageSize: 10,
 }
+// 是否结束标识
+const finish = ref(false)
 // 猜你喜欢 数据渲染
 const guessList = ref<GuessItem[]>([])
 const getHomeGoodsGuessLikeData = async () => {
+  if (finish.value) {
+    return uni.showToast({
+      icon: 'none',
+      title: '没有更多数据了~',
+    })
+  }
   const res = await getHomeGoodsGuessLikeAPI(pageParams)
+  // 数组累加
   guessList.value.push(...res.result.items)
-  pageParams.page++
+  // 当前页码是否等于总页数
+  if (pageParams.page < res.result.pages) {
+    pageParams.page++
+  } else {
+    // 加载已结束
+    finish.value = true
+  }
 }
 onMounted(() => getHomeGoodsGuessLikeData())
 
@@ -38,7 +53,7 @@ defineExpose({
       </view>
     </navigator>
   </view>
-  <view class="loading-text"> 正在加载... </view>
+  <view class="loading-text"> {{ finish ? '没有更多数据了~' : '正在加载...' }} </view>
 </template>
 
 <style lang="scss">
