@@ -37,16 +37,25 @@ onLoad(() => {
 
 const geussRef = ref<XtxGuessInstance>()
 // 滚动组件触底时触发
-const onScrollToLower = () => {
-  console.log('触底了')
+const onScrolltolower = () => {
   geussRef.value?.getMore()
+}
+
+// 设置当前下拉刷新状态
+const isTriggered = ref(false)
+// 滚动容器下拉刷新
+const onRefresherrefresh = async () => {
+  isTriggered.value = true
+  await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotData()])
+  isTriggered.value = false
 }
 </script>
 
 <template>
   <!-- 自定义导航栏 -->
   <CustomNavbar />
-  <scroll-view class="scroll-view" @scrolltolower="onScrollToLower" :scroll-y="true">
+  <scroll-view class="scroll-view" refresher-enabled @refresherrefresh="onRefresherrefresh"
+    :refresher-triggered="isTriggered" @scrolltolower="onScrolltolower" :scroll-y="true">
     <!-- 自定义轮播图 -->
     <XtxSwiper :list="bannerList" />
     <!-- 分类面板 -->
