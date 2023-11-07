@@ -23,7 +23,7 @@ onReady(() => uni.setNavigationBarTitle({ title: currHotMap!.title }))
 // 推荐封面图
 const bannerPicture = ref('')
 // 推荐选项
-const subTypes = ref<SubTypeItem[] & { finish?: boolean }>([])
+const subTypes = ref<(SubTypeItem & { finish?: boolean })[]>([]) // 使用 交叉类型 给对象添加属性
 const activeIndex = ref(0)
 // 获取 热门推荐 数据
 const getHotRecommendData = async () => {
@@ -50,7 +50,7 @@ const onScrolltolower = async () => {
   }
   // 重新请求推荐列表，并追加数据
   const res = await getHotRecommendAPI(currHotMap!.url, {
-    subTypes: currSubTypes.id,
+    subType: currSubTypes.id,
     page: currSubTypes.goodsItems.page,
     pageSize: currSubTypes.goodsItems.pageSize,
   })
