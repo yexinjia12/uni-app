@@ -32,6 +32,22 @@ const getHotRecommendData = async () => {
   subTypes.value = res.result.subTypes
 }
 onLoad(() => getHotRecommendData())
+
+// 滚动触底
+const onScrolltolower = async () => {
+  // 获取当前推荐列表
+  const currSubTypes = subTypes.value[activeIndex.value]
+  // 当前选项页码累加
+  currSubTypes.goodsItems.page++
+  // 重新请求推荐列表，并追加数据
+  const res = await getHotRecommendAPI(currHotMap!.url, {
+    subTypes: currSubTypes.id,
+    page: currSubTypes.goodsItems.page,
+    pageSize: currSubTypes.goodsItems.pageSize,
+  })
+  const newSubTypes = res.result.subTypes[activeIndex.value]
+  currSubTypes.goodsItems.items.push(...newSubTypes.goodsItems.items)
+}
 </script>
 
 <template>
@@ -47,7 +63,7 @@ onLoad(() => getHotRecommendData())
     </view>
     <!-- 推荐列表 -->
     <scroll-view scroll-y class="scroll-view" v-for="(item, index) in subTypes" :key="item.id"
-      v-show="activeIndex === index">
+      v-show="activeIndex === index" @scrolltolower="onScrolltolower">
       <view class="goods">
         <navigator hover-class="none" class="navigator" v-for="goods in item.goodsItems.items" :key="goods.id"
           :url="`/pages/goods/goods?id=${goods.id}`">
