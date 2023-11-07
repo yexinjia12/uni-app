@@ -10,7 +10,6 @@ type hotParams = PageParams & { subType?: string }
  * @param data 请求参数
  */
 export const getHotRecommendAPI = (url: string, data?: hotParams) => {
-  console.log(url)
   return http<HotResult>({
     method: 'GET',
     url,
