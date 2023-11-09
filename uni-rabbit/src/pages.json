@@ -9,6 +9,7 @@
       "^Xtx(.*)": "@/components/Xtx$1.vue"
     }
   },
+  // 页面路径和窗口表现
   "pages": [
     //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
@@ -59,6 +60,7 @@
       }
     }
   ],
+  // 默认窗口表现。
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "",
@@ -97,5 +99,26 @@
         "selectedIconPath": "static/tabs/user_selected.png"
       }
     ]
+  },
+  // 分包加载规则
+  "subPackages": [
+    {
+      "root": "pagesMember",
+      "pages": [
+        {
+          "path": "settings/index",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
+        }
+      ]
+    }
+  ],
+  "preloadRule": {
+    // 需要分包预下载的页面路径
+    "pages/my/my": {
+      "network": "all",
+      "packages": ["pagesMember"]
+    }
   }
 }
