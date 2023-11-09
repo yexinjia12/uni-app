@@ -8,6 +8,7 @@ import CustomNavbar from './components/CustomNavbar.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
 import PageSkeleton from './components/PageSkeleton.vue'
+import { useGuessList } from '@/composables'
 
 // 获取banner轮播图
 const bannerList = ref<BannerItem[]>([])
@@ -38,11 +39,7 @@ onLoad(async () => {
   isLoading.value = false
 })
 
-const geussRef = ref<XtxGuessInstance>()
-// 滚动组件触底时触发
-const onScrolltolower = () => {
-  geussRef.value?.getMore()
-}
+const { guessRef, onScrolltolower } = useGuessList()
 
 // 设置当前下拉刷新状态
 const isTriggered = ref(false)
@@ -50,12 +47,12 @@ const isTriggered = ref(false)
 const onRefresherrefresh = async () => {
   isTriggered.value = true
   // 重置猜你喜欢
-  geussRef.value?.resetData()
+  guessRef.value?.resetData()
   await Promise.all([
     getHomeBannerData(),
     getHomeCategoryData(),
     getHomeHotData(),
-    geussRef.value?.getMore(),
+    guessRef.value?.getMore(),
   ])
   isTriggered.value = false
 }
@@ -75,7 +72,7 @@ const onRefresherrefresh = async () => {
       <!-- 热门推荐 -->
       <HotPanel :list="hotList" />
       <!-- 猜你喜欢 -->
-      <XtxGuess ref="geussRef" />
+      <XtxGuess ref="guessRef" />
     </template>
   </scroll-view>
 </template>
