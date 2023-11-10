@@ -25,7 +25,7 @@ const onGetPhoneNumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
 
 // 模拟快捷登录
 const onGetphonenumberSimple = async () => {
-  const res = await postLoginWxMinSimpleAPI('13977388359')
+  const res = await postLoginWxMinSimpleAPI('13123456789')
   loginSuccess(res.result)
 }
 
