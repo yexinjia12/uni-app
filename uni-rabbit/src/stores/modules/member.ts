@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 // 定义 Store
 export const useMemberStore = defineStore(
@@ -13,6 +13,25 @@ export const useMemberStore = defineStore(
       profile.value = val
     }
 
+    // 修改昵称
+    const setProfileNickname = computed({
+      get() {
+        return profile.value.nickname
+      },
+      set(val) {
+        profile.value.nickname = val
+      },
+    })
+
+    const setProfileAvatar = computed({
+      get() {
+        return profile.value.avatar
+      },
+      set(val) {
+        profile.value.avatar = val
+      },
+    })
+
     // 清理会员信息，退出时使用
     const clearProfile = () => {
       profile.value = undefined
@@ -21,6 +40,8 @@ export const useMemberStore = defineStore(
     // 记得 return
     return {
       profile,
+      setProfileNickname,
+      setProfileAvatar,
       setProfile,
       clearProfile,
     }

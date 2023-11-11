@@ -39,7 +39,8 @@ const onAvatarChange = () => {
             // 修改 个人信息 头像
             profile.value!.avatar = avatar
             // 修改 我的 头像
-            memberStore.profile.avatar = avatar
+            // memberStore.profile.avatar = avatar
+            memberStore.setProfileAvatar = avatar
             uni.showToast({ icon: 'success', title: '更新成功' })
           } else {
             uni.showToast({ icon: 'error', title: '更新失败' })
@@ -55,14 +56,22 @@ const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
   profile.value.gender = ev.detail.value as Gender
 }
 
+// 修改生日
+const onBirthdayChange: UniHelper.DatePickerOnChange = (ev) => {
+  profile.value.birthday = ev.detail.value
+}
+
 // 个人信息-点击保存
 const onSubmit = async () => {
+  const { nickname, gender, birthday } = profile.value
   const res = await putMemberProfileAPI({
-    nickname: profile.value?.nickname,
-    gender: profile.value.gender,
+    nickname,
+    gender,
+    birthday,
   })
   // 修改Store昵称
-  memberStore.profile.nickname = res.result.nickname
+  // memberStore.profile.nickname = res.result.nickname
+  memberStore.setProfileNickname = res.result.nickname
   // 返回上一页
   uni.navigateBack()
   setTimeout(() => {
@@ -112,7 +121,8 @@ const onSubmit = async () => {
         </view>
         <view class="form-item">
           <text class="label">生日</text>
-          <picker class="picker" mode="date" start="1900-01-01" :end="new Date()" :value="profile?.birthday">
+          <picker @change="onBirthdayChange" class="picker" mode="date" start="1900-01-01" :end="new Date()"
+            :value="profile?.birthday">
             <view v-if="profile?.birthday">{{ profile?.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>
           </picker>
