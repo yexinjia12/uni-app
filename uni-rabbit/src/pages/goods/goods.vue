@@ -2,8 +2,11 @@
 import { onLoad } from '@dcloudio/uni-app'
 import { getGoodsByIdAPI } from '@/services/goods'
 import type { GoodsResult } from '@/types/goods'
-import type { SkuPopupLocaldata } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
-import { ref } from 'vue'
+import type {
+  SkuPopupLocaldata,
+  SkuPopupInstanceType,
+} from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
+import { ref, computed } from 'vue'
 import AddressPanel from './components/AddressPanel.vue'
 import ServicePanel from './components/ServicePanel.vue'
 
@@ -86,11 +89,21 @@ const openSkuPopup = (val: SkuMode) => {
   isShowSku.value = true
   mode.value = val
 }
+
+// SKU组件实例
+const skuPopupRef = ref<SkuPopupInstanceType>()
+const selectShop = computed(() => {
+  return skuPopupRef.value?.selectArr?.join(' ').trim() || '请选择商品规格'
+})
 </script>
 
 <template>
-  <vk-data-goods-sku-popup v-model="isShowSku" :localdata="localdata" :mode="mode" add-cart-background-color="#ffa868"
-    buy-now-background-color="#27ba9b" />
+  <vk-data-goods-sku-popup ref="skuPopupRef" v-model="isShowSku" :localdata="localdata" :mode="mode"
+    add-cart-background-color="#ffa868" buy-now-background-color="#27ba9b" :actived-style="{
+      color: '#27ba9b',
+      borderColor: '#27ba9b',
+      backgroundColor: 'e9f8f5',
+    }" />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
     <view class="goods">
@@ -122,7 +135,7 @@ const openSkuPopup = (val: SkuMode) => {
       <view class="action">
         <view @tap="openSkuPopup(SkuMode.Both)" class="item arrow">
           <text class="label">选择</text>
-          <text class="text ellipsis"> 请选择商品规格 </text>
+          <text class="text ellipsis"> {{ selectShop }} </text>
         </view>
         <view @tap="openPopup('address')" class="item arrow">
           <text class="label">送至</text>
