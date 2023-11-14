@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
 import { getGoodsByIdAPI } from '@/services/goods'
+import { postMemberCartAPI } from '@/services/cart'
 import type { GoodsResult } from '@/types/goods'
 import type {
   SkuPopupLocaldata,
   SkuPopupInstanceType,
+  SkuPopupEvent,
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 import { ref, computed } from 'vue'
 import AddressPanel from './components/AddressPanel.vue'
@@ -92,9 +94,20 @@ const openSkuPopup = (val: SkuMode) => {
 
 // SKU组件实例
 const skuPopupRef = ref<SkuPopupInstanceType>()
+// 显示已选中的商品规格
 const selectShop = computed(() => {
   return skuPopupRef.value?.selectArr?.join(' ').trim() || '请选择商品规格'
 })
+
+// 添加购物车
+const onAddCart = async (ev: SkuPopupEvent) => {
+  await postMemberCartAPI({
+    skuId: ev._id,
+    count: ev.buy_num,
+  })
+  uni.showToast({ icon: 'none', title: '添加购物车成功' })
+  isShowSku.value = false
+}
 </script>
 
 <template>
@@ -103,7 +116,7 @@ const selectShop = computed(() => {
       color: '#27ba9b',
       borderColor: '#27ba9b',
       backgroundColor: 'e9f8f5',
-    }" />
+    }" @add-cart="onAddCart" />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
     <view class="goods">
