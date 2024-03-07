@@ -10,6 +10,7 @@ import type { CartItem } from '@/types/cart'
 import type { InputNumberBoxEvent } from '@/components/vk-data-input-number-box/vk-data-input-number-box'
 import { onShow } from '@dcloudio/uni-app'
 import { ref, computed } from 'vue'
+import { useGuessList } from '@/composables'
 
 const memberStore = useMemberStore()
 
@@ -90,10 +91,13 @@ const onPayment = () => {
   }
   // TODO 跳转支付页面
 }
+
+// 猜你喜欢组合式函数调用
+const { guessRef, onScrolltolower } = useGuessList()
 </script>
 
 <template>
-  <scroll-view scroll-y class="scroll-view">
+  <scroll-view class="scroll-view" @scrolltolower="onScrolltolower" :scroll-y="true">
     <!-- 已登录: 显示购物车 -->
     <template v-if="memberStore.profile">
       <!-- 购物车列表 -->

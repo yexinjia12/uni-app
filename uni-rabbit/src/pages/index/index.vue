@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { getHomeBannerAPI, getHomeCategoryAPI, getHomeHotAPI } from '@/services/home'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
-import type { XtxGuessInstance } from '@/types/component'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import CustomNavbar from './components/CustomNavbar.vue'
@@ -63,6 +62,7 @@ const onRefresherrefresh = async () => {
   <CustomNavbar />
   <scroll-view class="scroll-view" refresher-enabled @refresherrefresh="onRefresherrefresh"
     :refresher-triggered="isTriggered" @scrolltolower="onScrolltolower" :scroll-y="true">
+    <!-- 新建分包页面 ->配置分包预下载  -->
     <PageSkeleton v-if="isLoading" />
     <template v-else>
       <!-- 自定义轮播图 -->
