@@ -29,8 +29,16 @@
         "navigationBarTextStyle": "white"
       }
     },
+    // tabBar页购物车
     {
       "path": "pages/cart/cart",
+      "style": {
+        "navigationBarTitleText": "购物车"
+      }
+    },
+    // 普通页购物车
+    {
+      "path": "pages/cart/cartNavigator",
       "style": {
         "navigationBarTitleText": "购物车"
       }

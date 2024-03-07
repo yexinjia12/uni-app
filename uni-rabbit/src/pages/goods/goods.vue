@@ -113,10 +113,10 @@ const onAddCart = async (ev: SkuPopupEvent) => {
 <template>
   <vk-data-goods-sku-popup ref="skuPopupRef" v-model="isShowSku" :localdata="localdata" :mode="mode"
     add-cart-background-color="#ffa868" buy-now-background-color="#27ba9b" :actived-style="{
-      color: '#27ba9b',
-      borderColor: '#27ba9b',
-      backgroundColor: 'e9f8f5',
-    }" @add-cart="onAddCart" />
+    color: '#27ba9b',
+    borderColor: '#27ba9b',
+    backgroundColor: 'e9f8f5',
+  }" @add-cart="onAddCart" />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
     <view class="goods">
@@ -205,7 +205,7 @@ const onAddCart = async (ev: SkuPopupEvent) => {
       <button class="icons-button" open-type="contact">
         <text class="icon-handset"></text>客服
       </button>
-      <navigator class="icons-button" url="/pages/cart/cart" open-type="switchTab">
+      <navigator class="icons-button" url="/pages/cart/cartNavigator" open-type="navigate">
         <text class="icon-cart"></text>购物车
       </navigator>
     </view>

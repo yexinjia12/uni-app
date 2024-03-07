@@ -2,6 +2,6 @@
 import cartMain from './components/cartMain.vue'
 </script>
 <template>
-  <!-- tabBar页购物车 -->
+  <!-- 普通页购物车 -->
   <cartMain></cartMain>
 </template>
