@@ -89,7 +89,8 @@ const onPayment = () => {
       icon: 'none',
     })
   }
-  // TODO 跳转支付页面
+  // 跳转支付页面
+  uni.navigateTo({ url: '/pagesOrder/create/index' })
 }
 
 // 猜你喜欢组合式函数调用
