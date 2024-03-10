@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { getMemberOrderPreAPI } from '@/services/order'
+import { getMemberOrderPreAPI, getMemberOrderPreNowAPI } from '@/services/order'
 import { onLoad } from '@dcloudio/uni-app'
 import type { OrderPreResult } from '@/types/order'
 import { useAddressStore } from '@/stores'
@@ -24,11 +24,23 @@ const onChangeDelivery: UniHelper.SelectorPickerOnChange = (ev) => {
   activeIndex.value = ev.detail.value
 }
 
+// 获取页面传参
+const query = defineProps<{
+  skuId?: string
+  count?: string
+}>()
+
 // 获取预付订单
 const orderPre = ref<OrderPreResult>()
 const getMemberOrderPreData = async () => {
-  const res = await getMemberOrderPreAPI()
-  orderPre.value = res.result
+  // 是否有页面参数，是-立即购买，否-预付订单
+  if (query.skuId && query.count) {
+    const res = await getMemberOrderPreNowAPI({ skuId: query.skuId, count: query.count })
+    orderPre.value = res.result
+  } else {
+    const res = await getMemberOrderPreAPI()
+    orderPre.value = res.result
+  }
 }
 
 onLoad(() => {
@@ -37,6 +49,8 @@ onLoad(() => {
 
 // 计算默认收获地址
 const addressStore = useAddressStore()
+console.log('addressStore', addressStore.selectedAddress)
+
 const selectAddress = computed(() => {
   return addressStore.selectedAddress || orderPre.value?.userAddresses.find((v) => v.isDefault)
 })

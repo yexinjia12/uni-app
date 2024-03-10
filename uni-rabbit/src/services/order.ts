@@ -10,3 +10,21 @@ export const getMemberOrderPreAPI = () => {
     url: '/member/order/pre',
   })
 }
+
+/**
+ * 填写订单-获取预付订单
+ * @param skuId 商品库存 ID
+|* @param count 商品数量
+|* @param addressId 收货地址 ID 
+ */
+export const getMemberOrderPreNowAPI = (data: {
+  skuId: string // 商品库存 ID
+  count: string
+  addressId?: string
+}) => {
+  return http<OrderPreResult>({
+    method: 'GET',
+    url: '/member/order/pre/now',
+    data,
+  })
+}
