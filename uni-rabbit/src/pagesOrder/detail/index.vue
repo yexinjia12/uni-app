@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useGuessList } from '@/composables'
 import { OrderState, orderStateList } from '@/services/constants'
-import { getMemberOrderByIdAPI } from '@/services/order'
+import { getMemberOrderByIdAPI, putMemberOrderReceiptByIdAPI } from '@/services/order'
 import {
   getPayWxPayMiniPayAPI,
   getPayMockAPI,
@@ -105,6 +105,7 @@ const onOrderPay = async () => {
   uni.redirectTo({ url: `/pagesOrder/payment/index?id=${query.id}` })
 }
 
+// 模拟发货
 const onOrderSend = async () => {
   // 仅在开发环境下使用，打包到生产环境会剔除以下代码（tree shaking 树摇优先）
   if (isDev) {
@@ -113,6 +114,21 @@ const onOrderSend = async () => {
     uni.showToast({ icon: 'success', title: '模拟发货成功' })
     order.value!.orderState = OrderState.DaiShouHuo
   }
+}
+
+// 确认收货
+const onOrderComfirm = () => {
+  // 二次弹窗确认
+  uni.showModal({
+    content: '为保障您的权益，请收到货并确认无误后，再确认收货',
+    showCancel: true,
+    success: async ({ confirm, cancel }) => {
+      if (confirm) {
+        const res = await putMemberOrderReceiptByIdAPI(query.id)
+        order.value = res.result
+      }
+    },
+  })
 }
 </script>
 
@@ -153,6 +169,10 @@ const onOrderSend = async () => {
             <!-- 待发货状态：模拟发货,开发期间使用,用于修改订单状态为已发货 -->
             <view v-if="isDev && order.orderState == OrderState.DaiFaHuo" class="button" @tap="onOrderSend">
               模拟发货
+            </view>
+            <!-- 待收货状态: 展示确认收货 -->
+            <view v-if="order.orderState == OrderState.DaiShouHuo" @tap="onOrderComfirm" class="button primary">
+              确认收货
             </view>
           </view>
         </template>
@@ -242,7 +262,9 @@ const onOrderSend = async () => {
             再次购买
           </navigator>
           <!-- 待收货状态: 展示确认收货 -->
-          <view class="button primary"> 确认收货 </view>
+          <view v-if="order?.orderState == OrderState.DaiShouHuo" @tap="onOrderComfirm" class="button primary">
+            确认收货
+          </view>
           <!-- 待评价状态: 展示去评价 -->
           <view class="button"> 去评价 </view>
           <!-- 待评价/已完成/已取消 状态: 展示删除订单 -->
