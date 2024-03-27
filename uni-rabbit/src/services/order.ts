@@ -91,3 +91,11 @@ export const getMemberOrderLogisticsByIdAPI = (id: string) => {
     url: `/member/order/${id}/logistics`,
   })
 }
+
+export const deleteMemberOrderAPI = (data: { ids: string[] }) => {
+  return http({
+    method: 'DELETE',
+    url: `/member/order`,
+    data,
+  })
+}
