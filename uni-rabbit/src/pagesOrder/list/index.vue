@@ -11,20 +11,26 @@ const orderTabs = ref([
   { orderState: 3, title: '待收货' },
   { orderState: 4, title: '待评价' },
 ])
+
+// 文字高亮下标
+const activeIndex = ref(0)
+console.log(activeIndex)
 </script>
 
 <template>
   <view class="viewport">
     <!-- tabs -->
     <view class="tabs">
-      <text class="item" v-for="item in 5" :key="item"> 待付款 </text>
+      <text class="item" v-for="(item, index) in orderTabs" :key="item.orderState" @tap="activeIndex = index">
+        {{ item.title }}
+      </text>
       <!-- 游标 -->
-      <view class="cursor" :style="{ left: 0 * 20 + '%' }"></view>
+      <view class="cursor" :style="{ left: activeIndex * 20 + '%' }"></view>
     </view>
     <!-- 滑动容器 -->
-    <swiper class="swiper">
+    <swiper class="swiper" @change="activeIndex = $event.detail.current" :current="activeIndex">
       <!-- 滑动项 -->
-      <swiper-item v-for="item in 5" :key="item">
+      <swiper-item v-for="item in orderTabs" :key="item.orderState">
         <!-- 订单列表 -->
         <scroll-view scroll-y class="orders">
           <view class="card" v-for="item in 2" :key="item">
@@ -37,7 +43,7 @@ const orderTabs = ref([
               <text class="icon-delete"></text>
             </view>
             <!-- 商品信息，点击商品跳转到订单详情，不是商品详情 -->
-            <navigator v-for="sku in 2" :key="sku" class="goods" :url="`/pagesOrder/detail/detail?id=1`"
+            <navigator v-for="sku in 2" :key="sku" class="goods" :url="`/pagesOrder/detail/index?id=1`"
               hover-class="none">
               <view class="cover">
                 <image mode="aspectFit" src="https://yanxuan-item.nosdn.127.net/c07edde1047fa1bd0b795bed136c2bb2.jpg">
@@ -61,7 +67,7 @@ const orderTabs = ref([
                 <view class="button primary">去支付</view>
               </template>
               <template v-else>
-                <navigator class="button secondary" :url="`/pagesOrder/create/create?orderId=id`" hover-class="none">
+                <navigator class="button secondary" :url="`/pagesOrder/create/index?orderId=id`" hover-class="none">
                   再次购买
                 </navigator>
                 <!-- 待收货状态: 展示确认收货 -->
