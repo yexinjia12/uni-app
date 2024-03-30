@@ -3,6 +3,8 @@ import type {
   OrderLogisticResult,
   OrderPreResult,
   OrderResult,
+  OrderListParams,
+  OrderListResult,
 } from '@/types/order'
 import { http } from '@/utils/http'
 
@@ -92,9 +94,26 @@ export const getMemberOrderLogisticsByIdAPI = (id: string) => {
   })
 }
 
+/**
+ * 删除订单
+ * @param data ids订单id
+ * @returns
+ */
 export const deleteMemberOrderAPI = (data: { ids: string[] }) => {
   return http({
     method: 'DELETE',
+    url: `/member/order`,
+    data,
+  })
+}
+
+/**
+ * 获取订单列表
+ * @param data orderState 订单状态
+ */
+export const getMemberOrderAPI = (data: OrderListParams) => {
+  return http<OrderListResult>({
+    method: 'GET',
     url: `/member/order`,
     data,
   })
