@@ -24,8 +24,11 @@ module.exports = {
     AnyObject: true,
   },
   parserOptions: {
-    ecmaVersion: 'latest',
+    sourceType: 'module',
+    ecmaVersion: 12,
+    parser: '@typescript-eslint/parser',
   },
+  plugins: ['vue', '@typescript-eslint'],
   rules: {
     'prettier/prettier': [
       'warn',
@@ -41,5 +44,6 @@ module.exports = {
     'vue/no-setup-props-destructure': ['off'],
     'vue/no-deprecated-html-element-is': ['off'],
     '@typescript-eslint/no-unused-vars': ['off'],
+    parser: 'babel-eslint',
   },
 }
