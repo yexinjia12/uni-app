@@ -4,6 +4,7 @@ import type { OrderListParams, OrderItem } from '@/types/order.d';
 import { getMemberOrderAPI } from '@/services/order';
 import { onMounted } from 'vue';
 import { OrderState, orderStateList } from '@/services/constants';
+import { getPayMockAPI, getPayWxPayMiniPayAPI } from '@/services/pay';
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
@@ -30,6 +31,24 @@ const getMemberOrderData = async () => {
 onMounted(() => {
   getMemberOrderData()
 })
+
+const isDev = import.meta.env.DEV
+// 订单支付
+const onOrderPay = async (id: string) => {
+  if (isDev) {
+    // 开发环境-模拟支付
+    await getPayMockAPI({ orderId: id })
+  } else {
+    // 生产环境
+    const res = await getPayWxPayMiniPayAPI({ orderId: id })
+    wx.requestPayment(res.result)
+  }
+  // 成功提示
+  uni.showToast({ icon: 'success', title: '更新成功' })
+  // 更新订单状态
+  const order = orderList.value.find(v => v.id === id)
+  order!.orderState = OrderState.DaiFaHuo
+}
 </script>
 <template>
   <scroll-view scroll-y class="orders">
@@ -65,7 +84,7 @@ onMounted(() => {
       <view class="action">
         <!-- 待付款状态：显示去支付按钮 -->
         <template v-if="item.orderState === OrderState.DaiFuKuan">
-          <view class="button primary">去支付</view>
+          <view class="button primary" @tap="onOrderPay(item.id)">去支付</view>
         </template>
         <template v-else>
           <navigator class="button secondary" :url="`/pagesOrder/create/index?orderId=${item.id}`" hover-class="none">
