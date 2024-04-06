@@ -116,9 +116,11 @@ const onOrderPay = async () => {
     // 开发环境-模拟支付
     await getPayMockAPI({ orderId: query.id })
   } else {
+    // #ifdef MP-WEIXIN
     // 生产环境
     const res = await getPayWxPayMiniPayAPI({ orderId: query.id })
     wx.requestPayment(res.result)
+    // #endif
   }
   // 关闭当前页面，跳转支付结果页
   uni.redirectTo({ url: `/pagesOrder/payment/index?id=${query.id}` })
@@ -158,8 +160,10 @@ const onOrderDelete = () => {
     success: async ({ confirm }) => {
       if (confirm) {
         await deleteMemberOrderAPI({ ids: [query.id] })
+        // #ifdef MP-WEIXIN
         // 关闭当前页面，跳转订单列表页
         wx.redirectTo({ url: '/pagesOrder/list/index' })
+        // #endif
       }
     },
   })
